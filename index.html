@@ -1,0 +1,1761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voltage, Current & Resistance — Series and Parallel Circuits</title>
+<style>
+:root {
+    --primary: #c4854c;
+    --secondary: #5a8a9a;
+    --highlight: #e07020;
+    --background: #faf8f5;
+    --card-bg: #fff;
+    --text: #4a3f35;
+    --text-light: #666;
+    --success: #5a9a6e;
+    --warning: #9a5a5a;
+    --sidebar-bg: #f5f0ea;
+    --sidebar-active: #c4854c;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    background: var(--background);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 16px;
+}
+
+/* Layout */
+.app {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 280px;
+    background: var(--sidebar-bg);
+    border-right: 1px solid #e0d8d0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 10;
+    padding: 24px 0;
+}
+
+.sidebar-title {
+    font-size: 1.1em;
+    font-weight: 700;
+    color: var(--primary);
+    padding: 0 20px 16px;
+    border-bottom: 2px solid var(--primary);
+    margin-bottom: 12px;
+}
+
+.sidebar-group-label {
+    font-size: 0.75em;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-light);
+    padding: 12px 20px 4px;
+    font-family: -apple-system, sans-serif;
+}
+
+.sidebar-item {
+    display: block;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 0.9em;
+    color: var(--text);
+    border-left: 3px solid transparent;
+    transition: all 0.2s;
+    font-family: -apple-system, sans-serif;
+}
+
+.sidebar-item:hover {
+    background: rgba(196, 133, 76, 0.1);
+}
+
+.sidebar-item.active {
+    background: rgba(196, 133, 76, 0.15);
+    border-left-color: var(--primary);
+    font-weight: 600;
+    color: var(--primary);
+}
+
+/* Main Content */
+.main {
+    margin-left: 280px;
+    flex: 1;
+    padding: 32px 40px;
+    max-width: 1200px;
+}
+
+.section {
+    display: none;
+}
+
+.section.active {
+    display: block;
+}
+
+.section-header {
+    font-size: 1.6em;
+    color: var(--primary);
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--primary);
+}
+
+.section-subtitle {
+    font-size: 1.05em;
+    color: var(--text-light);
+    margin-bottom: 28px;
+    font-style: italic;
+}
+
+.section-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+}
+
+.column-header {
+    font-weight: 600;
+    color: var(--primary);
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--primary);
+    margin-bottom: 12px;
+    font-family: -apple-system, sans-serif;
+    font-size: 0.95em;
+}
+
+.content-column, .questions-column {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Cards */
+.card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.card h3 {
+    font-size: 1.1em;
+    color: var(--text);
+    margin-bottom: 12px;
+}
+
+.card p, .card li {
+    margin-bottom: 8px;
+}
+
+.card ul, .card ol {
+    padding-left: 20px;
+}
+
+.card li {
+    padding-left: 4px;
+}
+
+/* Key Insight */
+.key-insight {
+    background: #fef8f0;
+    border-left: 4px solid var(--highlight);
+    border-radius: 0 12px 12px 0;
+    padding: 18px 20px;
+}
+
+.key-insight-label {
+    font-weight: 700;
+    color: var(--highlight);
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    font-family: -apple-system, sans-serif;
+}
+
+/* Misconception */
+.misconception {
+    background: #fdf5f5;
+    border-left: 4px solid var(--warning);
+    border-radius: 0 12px 12px 0;
+    padding: 18px 20px;
+}
+
+.misconception-label {
+    font-weight: 700;
+    color: var(--warning);
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    font-family: -apple-system, sans-serif;
+}
+
+/* Angle cards */
+.angle-card {
+    background: #f8fafb;
+    border-left: 4px solid var(--secondary);
+    border-radius: 0 12px 12px 0;
+    padding: 16px 20px;
+}
+
+.angle-label {
+    font-weight: 700;
+    color: var(--secondary);
+    font-size: 0.85em;
+    margin-bottom: 6px;
+    font-family: -apple-system, sans-serif;
+}
+
+/* Formula */
+.formula {
+    background: #f5f0ea;
+    border-radius: 12px;
+    padding: 16px 20px;
+    text-align: center;
+    font-size: 1.2em;
+    font-weight: 600;
+    color: var(--text);
+    margin: 8px 0;
+}
+
+.formula-small {
+    font-size: 0.85em;
+    color: var(--text-light);
+    font-weight: 400;
+    margin-top: 4px;
+}
+
+/* Summary Table */
+.summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 0.95em;
+}
+
+.summary-table th {
+    background: var(--primary);
+    color: white;
+    padding: 10px 14px;
+    text-align: left;
+    font-family: -apple-system, sans-serif;
+    font-size: 0.9em;
+}
+
+.summary-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #e8e0d8;
+}
+
+.summary-table tr:nth-child(even) td {
+    background: #faf8f5;
+}
+
+/* MCQ */
+.question {
+    margin-bottom: 16px;
+}
+
+.question p {
+    margin-bottom: 8px;
+    font-family: -apple-system, sans-serif;
+    font-size: 0.95em;
+}
+
+.mcq-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 10px 0;
+}
+
+.mcq-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 16px;
+    background: #f8f6f3;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: -apple-system, sans-serif;
+    font-size: 0.9em;
+}
+
+.mcq-option:hover {
+    background: #f0ebe5;
+}
+
+.mcq-option.selected {
+    background: var(--secondary);
+    color: white;
+}
+
+.mcq-option.correct {
+    background: var(--success);
+    color: white;
+}
+
+.mcq-option.incorrect {
+    background: var(--warning);
+    color: white;
+}
+
+.mcq-option-letter {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: white;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    flex-shrink: 0;
+    font-size: 0.85em;
+}
+
+.mcq-feedback {
+    margin-top: 8px;
+    font-size: 0.9em;
+    font-family: -apple-system, sans-serif;
+    padding: 8px 12px;
+    border-radius: 6px;
+    display: none;
+}
+
+.mcq-feedback.show {
+    display: block;
+}
+
+.mcq-feedback.correct-feedback {
+    background: #f0f8f2;
+    color: var(--success);
+}
+
+.mcq-feedback.incorrect-feedback {
+    background: #fdf5f5;
+    color: var(--warning);
+}
+
+/* Subjective */
+.answer-toggle {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85em;
+    font-family: -apple-system, sans-serif;
+    transition: background 0.2s;
+}
+
+.answer-toggle:hover {
+    background: #b07842;
+}
+
+.answer-space {
+    margin-top: 10px;
+    padding: 16px;
+    background: #f0f8f0;
+    border-radius: 8px;
+    border-left: 4px solid var(--success);
+    font-size: 0.95em;
+}
+
+.answer-hidden {
+    display: none;
+}
+
+/* Navigation */
+.nav-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 36px;
+    padding-top: 20px;
+    border-top: 1px solid #e0d8d0;
+}
+
+.nav-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95em;
+    font-family: -apple-system, sans-serif;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.nav-btn:hover {
+    background: #b07842;
+}
+
+.nav-btn:disabled {
+    background: #ccc;
+    cursor: default;
+}
+
+.nav-indicator {
+    font-size: 0.85em;
+    color: var(--text-light);
+    font-family: -apple-system, sans-serif;
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+    .section-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Mobile hamburger */
+.mobile-menu-btn {
+    display: none;
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 20;
+    background: var(--primary);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    font-size: 1.4em;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 9;
+}
+
+@media (max-width: 768px) {
+    .mobile-menu-btn {
+        display: block;
+    }
+    .sidebar {
+        display: none;
+        z-index: 15;
+    }
+    .sidebar.open {
+        display: block;
+    }
+    .sidebar-overlay.open {
+        display: block;
+    }
+    .main {
+        margin-left: 0;
+        padding: 20px;
+        padding-top: 60px;
+    }
+}
+
+/* strong highlight within text */
+strong.rule {
+    color: var(--highlight);
+}
+
+.em-highlight {
+    background: #fef3e0;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-style: normal;
+    font-weight: 600;
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<button class="mobile-menu-btn" onclick="toggleMobileMenu()">&#9776;</button>
+<div class="sidebar-overlay" onclick="toggleMobileMenu()"></div>
+
+<!-- Sidebar -->
+<nav class="sidebar">
+    <div class="sidebar-title">Voltage, Current & Resistance</div>
+    <div class="sidebar-group-label">Foundations</div>
+    <div class="sidebar-item active" data-section="0">1. The Electric Circuit</div>
+    <div class="sidebar-item" data-section="1">2. Current</div>
+    <div class="sidebar-item" data-section="2">3. Current Splits at Junctions</div>
+    <div class="sidebar-item" data-section="3">4. Voltage</div>
+    <div class="sidebar-group-label">Series & Parallel</div>
+    <div class="sidebar-item" data-section="4">5. Voltage in Series</div>
+    <div class="sidebar-item" data-section="5">6. Voltage in Parallel</div>
+    <div class="sidebar-group-label">Connecting It All</div>
+    <div class="sidebar-item" data-section="6">7. Resistance & Ohm's Law</div>
+    <div class="sidebar-item" data-section="7">8. Putting It All Together</div>
+</nav>
+
+<!-- Main Content -->
+<div class="main">
+
+<!-- ===================== SECTION 1 ===================== -->
+<div class="section active" id="section-0">
+    <h1 class="section-header">1. The Electric Circuit — A Complete Loop</h1>
+    <p class="section-subtitle">For electricity to work, charges need a complete path.</p>
+
+    <div class="section-grid">
+        <div class="content-column">
+            <div class="column-header">Concepts</div>
+
+            <div class="card">
+                <h3>What are electric charges?</h3>
+                <p>Everything around you is made of atoms. Inside every atom, there are tiny particles called <strong>electrons</strong> that carry a negative electric charge.</p>
+                <p>In metals (like copper wire), some electrons are free to move. These <strong>free electrons</strong> are what carry electric current through a circuit.</p>
+                <p>A <strong>battery</strong> has two terminals: positive (+) and negative (-). Inside the battery, a chemical reaction creates an energy difference between these two terminals. This energy difference is what pushes electrons through the circuit.</p>
+            </div>
+
+            <div class="card">
+                <h3>The complete loop</h3>
+                <p>For electrons to flow, they need a <strong>complete, unbroken path</strong> — from one terminal of the battery, through the wires and components, and back to the other terminal.</p>
+                <p>This complete path is called a <strong>circuit</strong>.</p>
+                <ul>
+                    <li>If the path is complete (closed circuit) — electrons flow.</li>
+                    <li>If the path is broken anywhere (open circuit) — electrons cannot flow. But the battery's energy difference is still there, ready and waiting.</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>Components in a circuit</h3>
+                <ul>
+                    <li><strong>Battery / Cell</strong> — provides energy to push charges around the circuit.</li>
+                    <li><strong>Wires</strong> — the paths that charges travel through.</li>
+                    <li><strong>Lamps / Buzzers</strong> — components that convert electrical energy into light, sound, or heat.</li>
+                    <li><strong>Switches</strong> — break or complete the circuit. Open switch = broken loop = no current.</li>
+                    <li><strong>Resistors</strong> — oppose the flow of charge (more on this later).</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>Two types of circuits</h3>
+                <p><strong>Series circuit:</strong> A single loop. All components are connected one after another on the same path. There is only one route for charge to take.</p>
+                <p><strong>Parallel circuit:</strong> The path splits into two or more branches. Each branch is a separate route for charge. The branches reconnect before returning to the battery.</p>
+                <p>We will study each type in detail in later sections. For now, just know these two arrangements exist.</p>
+            </div>
+
+            <div class="angle-card">
+                <div class="angle-label">Angle 1 — Trace the path</div>
+                <p>Draw a simple circuit: battery &rarr; wire &rarr; lamp &rarr; wire &rarr; back to battery. Can you trace a complete loop from one terminal to the other? Yes. Electrons flow. The lamp lights.</p>
+            </div>
+
+            <div class="angle-card">
+                <div class="angle-label">Angle 2 — Open the switch</div>
+                <p>Now open the switch. The loop is broken. No electrons can flow — the current is zero everywhere. But the battery hasn't changed. Its energy difference is still there. The moment you close the switch, current flows instantly.</p>
+            </div>
+
+            <div class="angle-card">
+                <div class="angle-label">Angle 3 — A broken bulb</div>
+                <p>What if the filament inside a lamp snaps? The loop is broken at the lamp. It's the same as opening a switch — no current flows anywhere in the circuit. Every component stops working, not just the broken one.</p>
+            </div>
+
+            <div class="key-insight">
+                <div class="key-insight-label">Key Insight</div>
+                <p>The battery provides energy. The complete loop lets electrons carry that energy to the components. Break the loop <em>anywhere</em>, and everything stops. But the battery's energy is still there — waiting for the loop to be restored.</p>
+            </div>
+        </div>
+
+        <div class="questions-column">
+            <div class="column-header">Questions</div>
+
+            <div class="card">
+                <h3>Quick Check</h3>
+
+                <div class="question" data-mcq="1-1">
+                    <p><strong>Q1:</strong> What happens when a switch in a circuit is opened?</p>
+                    <div class="mcq-options">
+                        <div class="mcq-option" data-value="A"><span class="mcq-option-letter">A</span><span>Current flows faster because there's less in the way</span></div>
+                        <div class="mcq-option" data-value="B" data-correct="true"><span class="mcq-option-letter">B</span><span>Current stops everywhere because the loop is broken</span></div>
+                        <div class="mcq-option" data-value="C"><span class="mcq-option-letter">C</span><span>Current stops only at the switch, but continues elsewhere</span></div>
+                        <div class="mcq-option" data-value="D"><span class="mcq-option-letter">D</span><span>The battery stops producing energy</span></div>
+                    </div>
+                    <div class="mcq-feedback"></div>
+                </div>
+
+                <div class="question" data-mcq="1-2">
+                    <p><strong>Q2:</strong> What does a battery provide to a circuit?</p>
+                    <div class="mcq-options">
+                        <div class="mcq-option" data-value="A"><span class="mcq-option-letter">A</span><span>Electrons — it creates new electrons to send around</span></div>
+                        <div class="mcq-option" data-value="B"><span class="mcq-option-letter">B</span><span>Light and heat energy</span></div>
+                        <div class="mcq-option" data-value="C" data-correct="true"><span class="mcq-option-letter">C</span><span>Energy to push existing charges around the circuit</span></div>
+                        <div class="mcq-option" data-value="D"><span class="mcq-option-letter">D</span><span>Resistance to slow down the charges</span></div>
+                    </div>
+                    <div class="mcq-feedback"></div>
+                </div>
+
+                <div class="question" data-mcq="1-3">
+                    <p><strong>Q3:</strong> In a series circuit, if one lamp breaks, what happens?</p>
+                    <div class="mcq-options">
+                        <div class="mcq-option" data-value="A"><span class="mcq-option-letter">A</span><span>Only that lamp goes off; others keep working</span></div>
+                        <div class="mcq-option" data-value="B"><span class="mcq-option-letter">B</span><span>The other lamps get brighter</span></div>
+                        <div class="mcq-option" data-value="C" data-correct="true"><span class="mcq-option-letter">C</span><span>All lamps go off because the loop is broken</span></div>
+                        <div class="mcq-option" data-value="D"><span class="mcq-option-letter">D</span><span>The battery stops working</span></div>
+                    </div>
+                    <div class="mcq-feedback"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Think Deeper</h3>
+
+                <div class="question">
+                    <p><strong>Q4:</strong> A student connects a battery to a lamp but forgets one wire. Will the lamp light? Explain why or why not.</p>
+                    <button class="answer-toggle" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer-space answer-hidden">
+                        <p>No, the lamp will not light. Without both wires, there is no complete loop. Electrons need a continuous path from one terminal of the battery, through the lamp, and back to the other terminal. A missing wire breaks this loop, so no current can flow.</p>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <p><strong>Q5:</strong> When a switch is open, is the battery "doing nothing"? Explain.</p>
+                    <button class="answer-toggle" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer-space answer-hidden">
+                        <p>The battery still has its energy difference (voltage) between its terminals — the chemical reaction inside hasn't stopped. It's ready to push charges the moment the circuit is complete. So the battery isn't "doing nothing" — it's maintaining an energy difference. But no current flows because there's no complete path.</p>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <p><strong>Q6:</strong> In your own words, explain why a circuit must be a complete loop for current to flow.</p>
+                    <button class="answer-toggle" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer-space answer-hidden">
+                        <p>Electrons need somewhere to go AND somewhere to come back to. If the path is broken at any point, electrons at that break have nowhere to move — and since they can't jump across a gap, the entire flow stops. It doesn't matter where the break is — a break anywhere stops the flow everywhere, because every electron in the loop depends on the one ahead of it being able to move forward.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-bar">
+        <button class="nav-btn" disabled>&larr; Previous</button>
+        <span class="nav-indicator">Section 1 of 8</span>
+        <button class="nav-btn" onclick="goToSection(1)">Next &rarr;</button>
+    </div>
+</div>
+
+<!-- ===================== SECTION 2 ===================== -->
+<div class="section" id="section-1">
+    <h1 class="section-header">2. Current — The Flow of Charge</h1>
+    <p class="section-subtitle">Current is how much charge flows past a point each second. It is never used up.</p>
+
+    <div class="section-grid">
+        <div class="content-column">
+            <div class="column-header">Concepts</div>
+
+            <div class="card">
+                <h3>What is electric current?</h3>
+                <p>When a circuit is complete, electrons move through the wires and components. This movement of charge is called <strong>electric current</strong>.</p>
+                <p>Current tells you: <strong>how much charge is passing a point every second.</strong></p>
+                <p>It is measured in <strong>amperes (A)</strong> using an instrument called an <strong>ammeter</strong>.</p>
+                <p>An ammeter must be placed <strong>in the path</strong> of the current (in series with the component you're measuring). The charge must flow <em>through</em> the ammeter so it can count how much is passing.</p>
+            </div>
+
+            <div class="card">
+                <h3>The most important rule of current</h3>
+                <p><strong class="rule">Current is NEVER used up.</strong></p>
+                <p>Place an ammeter <em>before</em> a lamp. It reads 0.5 A.</p>
+                <p>Place another ammeter <em>after</em> the same lamp. It also reads 0.5 A.</p>
+                <p>The same amount of charge that enters the lamp also exits the lamp. No charge is created inside the lamp. No charge is destroyed inside the lamp.</p>
+                <p>The lamp glows not because it "consumes" electrons, but because <strong>electrons transfer their energy to the lamp as they pass through</strong>. The electrons themselves keep moving. They come out the other side with less energy — but the same number of electrons come out.</p>
+            </div>
+
+            <div class="card">
+                <h3>In a series circuit: current is the same everywhere</h3>
+                <p>Since there is only one path, every electron must pass through every component. No electrons leave the path. No new electrons join.</p>
+                <p>So the current reading is <strong>identical</strong> at every point in a series circuit — before the first lamp, between the lamps, after the last lamp, at the battery. All the same.</p>
+            </div>
+
+            <div class="angle-card">
+                <div class="angle-label">Angle 1 — Measurement</div>
+                <p>Put ammeters at three different points in a series circuit. All three read the same value. This isn't theory — it's what you actually observe. You can verify it yourself with real ammeters.</p>
+            </div>
+
+            <div class="angle-card">
+                <div class="angle-label">Angle 2 — Conservation</div>
+                <p>Charge is conserved. This is a fundamental law of physics. Electrons don't vanish inside a lamp and don't appear out of nothing. What goes in must come out. If 100 electrons enter a lamp per second, 100 electrons exit per second.</p>
+            </div>
+
+            <div class="angle-card">
+                <div class="angle-label">Angle 3 — Energy vs Charge</div>
+                <p>The battery gives <em>energy</em> to the electrons. The lamp takes <em>energy</em> from the electrons. But the electrons themselves keep circulating. When the battery eventually "dies," it has run out of <em>energy</em> to give — it has NOT run out of electrons to push.</p>
+            </div>
+
+            <div class="misconception">
+                <div class="misconception-label">Common Mistake</div>
+                <p><strong>"The first lamp gets more current than the second."</strong></p>
+                <p>No. Measure it. The current is exactly the same before the first lamp, between the lamps, and after the second lamp. Electrons don't "slow down" or "get used up" as they pass through components. They lose energy, not quantity.</p>
+            </div>
+
+            <div class="key-insight">
+                <div class="key-insight-label">Key Insight</div>
+                <p>Current is conserved. Always. In any single path, the current entering equals the current leaving. Electrons carry energy — they deliver it at components — but the electrons themselves keep flowing around the loop.</p>
+            </div>
+        </div>
+
+        <div class="questions-column">
+            <div class="column-header">Questions</div>
+
+            <div class="card">
+                <h3>Quick Check</h3>
+
+                <div class="question" data-mcq="2-1">
+                    <p><strong>Q1:</strong> How should an ammeter be connected in a circuit?</p>
+                    <div class="mcq-options">
+                        <div class="mcq-option" data-value="A"><span class="mcq-option-letter">A</span><span>Across the component (in parallel)</span></div>
+                        <div class="mcq-option" data-value="B" data-correct="true"><span class="mcq-option-letter">B</span><span>In the path of current (in series)</span></div>
+                        <div class="mcq-option" data-value="C"><span class="mcq-option-letter">C</span><span>Connected only to the battery</span></div>
+                        <div class="mcq-option" data-value="D"><span class="mcq-option-letter">D</span><span>It doesn't matter where you place it</span></div>
+                    </div>
+                    <div class="mcq-feedback"></div>
+                </div>
+
+                <div class="question" data-mcq="2-2">
+                    <p><strong>Q2:</strong> In a series circuit, ammeter A1 (before the lamp) reads 0.3 A. What does ammeter A2 (after the lamp) read?</p>
+                    <div class="mcq-options">
+                        <div class="mcq-option" data-value="A"><span class="mcq-option-letter">A</span><span>Less than 0.3 A (lamp used some current)</span></div>
+                        <div class="mcq-option" data-value="B"><span class="mcq-option-letter">B</span><span>More than 0.3 A (lamp added current)</span></div>
+                        <div class="mcq-option" data-value="C" data-correct="true"><span class="mcq-option-letter">C</span><span>Exactly 0.3 A</span></div>
+                        <div class="mcq-option" data-value="D"><span class="mcq-option-letter">D</span><span>0 A (all current was consumed)</span></div>
+                    </div>
+                    <div class="mcq-feedback"></div>
+                </div>
+
+                <div class="question" data-mcq="2-3">
+                    <p><strong>Q3:</strong> What does electric current actually measure?</p>
+                    <div class="mcq-options">
+                        <div class="mcq-option" data-value="A"><span class="mcq-option-letter">A</span><span>The energy stored in the battery</span></div>
+                        <div class="mcq-option" data-value="B"><span class="mcq-option-letter">B</span><span>How hot the wires get</span></div>
+                        <div class="mcq-option" data-value="C"><span class="mcq-option-letter">C</span><span>The resistance of the circuit</span></div>
+                        <div class="mcq-option" data-value="D" data-correct="true"><span class="mcq-option-letter">D</span><span>The amount of charge flowing past a point per second</span></div>
+                    </div>
+                    <div class="mcq-feedback"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Think Deeper</h3>
+
+                <div class="question">
+                    <p><strong>Q4:</strong> A student says: "The lamp uses up the current, so less comes out the other side." Explain clearly why this is wrong.</p>
+                    <button class="answer-toggle" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer-space answer-hidden">
+                        <p>The lamp does not "use up" current. The same number of electrons that enter the lamp also exit it — charge is conserved. What the lamp does is take <em>energy</em> from the electrons. The electrons enter with high energy (given by the battery) and exit with less energy (which has been converted to light and heat). But the flow of electrons — the current — is unchanged.</p>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <p><strong>Q5:</strong> If current isn't used up in a lamp, why does a battery eventually go flat?</p>
+                    <button class="answer-toggle" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer-space answer-hidden">
+                        <p>The battery runs out of <em>energy</em>, not electrons. The chemical reaction inside the battery is what provides energy to push the electrons. When the chemicals are used up, the battery can no longer give energy to the electrons — so even though the electrons are still there, nothing is pushing them. The battery goes flat because its energy source is exhausted, not because it ran out of charge to push.</p>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <p><strong>Q6:</strong> A series circuit has a battery, a lamp, and a buzzer. The ammeter near the battery reads 0.4 A. What is the current between the lamp and the buzzer? What is the current after the buzzer?</p>
+                    <button class="answer-toggle" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer-space answer-hidden">
+                        <p>Both are 0.4 A. In a series circuit, there is only one path. The current is the same at every point — near the battery, between the lamp and buzzer, and after the buzzer. Current is never used up.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-bar">
+        <button class="nav-btn" onclick="goToSection(0)">&larr; Previous</button>
+        <span class="nav-indicator">Section 2 of 8</span>
+        <button class="nav-btn" onclick="goToSection(2)">Next &rarr;</button>
+    </div>
+</div>
+
+<!-- ===================== SECTION 3 ===================== -->
+<div class="section" id="section-2">
+    <h1 class="section-header">3. Current Splits at Junctions</h1>
+    <p class="section-subtitle">When the path divides, electrons divide too. The total is always conserved.</p>
+
+    <div class="section-grid">
+        <div class="content-column">
+            <div class="column-header">Concepts</div>
+
+            <div class="card">
+                <h3>What happens at a junction?</h3>
+                <p>So far we've looked at circuits with a single path. But what happens when the wire <strong>splits into two or more branches</strong>?</p>
+                <p>At a <strong>junction</strong> (where the wire splits), the electrons divide. Some take one branch, some take the other.</p>
+                <p>The fundamental rule still holds: <strong>charge is conserved</strong>.</p>
+                <div class="formula">
+                    I<sub>total</sub> = I<sub>branch 1</sub> + I<sub>branch 2</sub> + ...
+                    <div class="formula-small">The total current entering a junction equals the total current leaving it.</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Equal and unequal splits</h3>
+                <p><strong>Equal split:</strong> Battery pushes 0.8 A. Wire splits into two identical branches. Each branch carries 0.4 A. Total: 0.4 + 0.4 = 0.8 A. Conserved.</p>
+                <p><strong>Unequal split:</strong> Battery pushes 1.2 A. Branch 1 carries 0.8 A, Branch 2 carries 0.4 A. Total: 0.8 + 0.4 = 1.2 A. Still conserved.</p>
+                <p>The split doesn't have to be equal. If one branch is "easier" for electrons to flow through (less resistance — we'll quantify this later), more electrons take that path.</p>
+            </div>
+
+            <div class="card">
+                <h3>When branches rejoin</h3>
+                <p>After the branches, the wires come back together before returning to the battery. At this point, the currents from all branches <strong>add back up</strong> to give the total current.</p>
+                <p>What splits must recombine. No electrons are lost along the way.</p>
+            </div>
+
+            <div class="angle-card">
+                <div class="angle-label">Angle 1 — Counting electrons</div>
+                <p>Imagine 100 electrons arriving at a junction every second. They must all go somewhere. Maybe 60 go left and 40 go right. But all 100 are accounted for. You can't have 60 going left and 60 going right — that would be 120 electrons from 100. Impossible.</p>
+            </div>
+
+            <div class="angle-card">
+                <div class="angle-label">Angle 2 — Measurement</div>
+                <p>Place an ammeter in each branch and one near the battery. The branch readings <em>always</em> add up to the battery reading. This is not approximate — it is exact. You can verify this in any lab.</p>
+            </div>
+
+            <div class="angle-card">
+                <div class="angle-label">Angle 3 — Adding more branches</div>
+                <p>Add a third branch. Now the current splits three ways. But something interesting happens: the <em>total</em> current from the battery increases. Why? Because there are more paths available for electrons. The battery responds by pushing more total current. (We'll understand exactly why when we learn about resistance.)</p>
+            </div>
+
+            <div class="angle-card">
+                <div class="angle-label">Angle 4 — Your house</div>
+                <p>In your house, turning on an extra appliance doesn't reduce the current to other appliances. It creates a new path, and the total current from the mains supply increases. Each appliance operates independently on its own branch.</p>
+            </div>
+
+            <div class="key-insight">
+                <div class="key-insight-label">Key Insight</div>
+                <p>Current is conserved at every junction. Total in = total out. When paths split, current splits. When paths rejoin, currents add back up. The total number of electrons is always accounted for.</p>
+            </div>
+        </div>
+
+        <div class="questions-column">
+            <div class="column-header">Questions</div>
+
+            <div class="card">
+                <h3>Quick Check</h3>
+
+                <div class="question" data-mcq="3-1">
+                    <p><strong>Q1:</strong> The current from a battery is 1.5 A. It splits into two branches. Branch 1 carries 0.9 A. What does Branch 2 carry?</p>
+                    <div class="mcq-options">
+                        <div class="mcq-option" data-value="A"><span class="mcq-option-letter">A</span><span>1.5 A</span></div>
+                        <div class="mcq-option" data-value="B" data-correct="true"><span class="mcq-option-letter">B</span><span>0.6 A</span></div>
+                        <div class="mcq-option" data-value="C"><span class="mcq-option-letter">C</span><span>0.9 A</span></div>
+                        <div class="mcq-option" data-value="D"><span class="mcq-option-letter">D</span><span>2.4 A</span></div>
+                    </div>
+                    <div class="mcq-feedback"></div>
+                </div>
+
+                <div class="question" data-mcq="3-2">
+                    <p><strong>Q2:</strong> At a junction, what happens to the total current?</p>
+                    <div class="mcq-options">
+                        <div class="mcq-option" data-value="A"><span class="mcq-option-letter">A</span><span>It increases</span></div>
+                        <div class="mcq-option" data-value="B"><span class="mcq-option-letter">B</span><span>It decreases</span></div>
+                        <div class="mcq-option" data-value="C" data-correct="true"><span class="mcq-option-letter">C</span><span>It is conserved (total in = total out)</span></div>
+                        <div class="mcq-option" data-value="D"><span class="mcq-option-letter">D</span><span>It becomes zero</span></div>
+                    </div>
+                    <div class="mcq-feedback"></div>
+                </div>
+
+                <div class="question" data-mcq="3-3">
+                    <p><strong>Q3:</strong> You add a third branch to a parallel circuit. What happens to the <em>total</em> current from the battery?</p>
+                    <div class="mcq-options">
+                        <div class="mcq-option" data-value="A"><span class="mcq-option-letter">A</span><span>It decreases</span></div>
+                        <div class="mcq-option" data-value="B" data-correct="true"><span class="mcq-option-letter">B</span><span>It increases</span></div>
+                        <div class="mcq-option" data-value="C"><span class="mcq-option-letter">C</span><span>It stays the same</span></div>
+                        <div class="mcq-option" data-value="D"><span class="mcq-option-letter">D</span><span>It depends on the battery</span></div>
+                    </div>
+                    <div class="mcq-feedback"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Think Deeper</h3>
+
+                <div class="question">
+                    <p><strong>Q4:</strong> A circuit has a battery and three parallel branches carrying 0.3 A, 0.5 A, and 0.2 A. What is the current from the battery?</p>
+                    <button class="answer-toggle" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer-space answer-hidden">
+                        <p>The current from the battery = 0.3 + 0.5 + 0.2 = <strong>1.0 A</strong>. The total current is the sum of all the branch currents, because charge is conserved.</p>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <p><strong>Q5:</strong> Two branches in a parallel circuit carry different currents — one carries 0.8 A and the other carries 0.3 A. What might explain why one carries more than the other?</p>
+                    <button class="answer-toggle" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer-space answer-hidden">
+                        <p>The branch carrying more current (0.8 A) has less opposition (resistance) to the flow of charge. Electrons take the "easier" path in greater numbers. The branch carrying 0.3 A has more resistance — something in that branch makes it harder for electrons to flow through. We will study resistance in detail in Section 7.</p>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <p><strong>Q6:</strong> A student says: "If I add more branches, the current in each branch gets smaller because the battery's current is shared." Is this correct? Explain.</p>
+                    <button class="answer-toggle" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer-space answer-hidden">
+                        <p>This is <strong>not correct</strong>. When you add a new branch, the current in the existing branches doesn't change — each branch is independent. What happens is the battery pushes <em>more</em> total current because there are more paths available. The new branch gets its own current on top of what the other branches already carry. The battery works harder, not the same amount spread thinner.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-bar">
+        <button class="nav-btn" onclick="goToSection(1)">&larr; Previous</button>
+        <span class="nav-indicator">Section 3 of 8</span>
+        <button class="nav-btn" onclick="goToSection(3)">Next &rarr;</button>
+    </div>
+</div>
+
+<!-- ===================== SECTION 4 ===================== -->
+<div class="section" id="section-3">
+    <h1 class="section-header">4. Voltage — Energy Given to Each Charge</h1>
+    <p class="section-subtitle">Voltage is the work done per unit charge. It is the push. It exists even without current.</p>
+
+    <div class="section-grid">
+        <div class="content-column">
+            <div class="column-header">Concepts</div>
+
+            <div class="card">
+                <h3>Building from what you know</h3>
+                <p>You already know from mechanics that <strong>Work = Force &times; Distance</strong> (W = F &times; d). A force moves an object through a distance, and work is done — energy is transferred.</p>
+                <p>In electricity, there is a direct parallel:</p>
+                <div class="formula">
+                    Work = Charge &times; Voltage
+                    <div class="formula-small">W = Q &times; V</div>
+                </div>
+                <p>The battery moves charge through a voltage, and work is done — energy is transferred to the charges.</p>
+                <p>So <strong>voltage is the work done per unit charge</strong>. A 6V battery does 6 joules of work on every coulomb of charge that passes through it.</p>
+                <p>This is why voltage is sometimes called <strong>electromotive force (EMF)</strong> — it's the "force" (in energy terms) that drives charge around the circuit.</p>
+            </div>
+
+            <div class="card">
+                <h3>What voltage actually is</h3>
+                <p>Voltage is measured in <strong>volts (V)</strong> using a <strong>voltmeter</strong>.</p>
+                <p>A voltmeter is connected <strong>across</strong> a component (in parallel with it). It measures the <strong>energy difference</strong> between two points.</p>
+                <ul>
+                    <li>The battery <strong>gives</strong> energy to charges — this is the battery's voltage (EMF).</li>
+                    <li>Components <strong>take</strong> energy from charges — this is called the <strong>voltage drop</strong> across the component.</li>
+                </ul>
+                <p>Voltage is also called <strong>potential difference (p.d.)</strong> — the difference in energy per charge between two points.</p>
+            </div>
+
+            <div class="card">
+                <h3>The key principle — voltage drops</h3>
+                <p>When charge flows through a component (like a resistor or lamp), it <strong>loses some of its energy</strong>. This loss is the voltage drop.</p>
+                <p>The component converts this electrical energy into other forms — light, heat, or sound.</p>
+                <p><strong>The total energy given by the battery = the total energy dropped across all components.</strong> Energy is conserved.</p>
+            </div>
+
+            <div class="angle-card">
+                <div class="angle-label">Angle 1 — Energy bookkeeping</div>
+                <p>Battery gives 6 J per coulomb. If there's one lamp, it drops all 6 V. If there are two identical lamps in series, each drops 3 V. Total: 3 + 3 = 6 V. Energy given = energy taken. Always.</p>
+            </div>
+
+            <div class="angle-card">
+                <div class="angle-label">Angle 2 — Measurement</div>
+                <p>Connect a voltmeter across the battery — reads 6 V. Connect voltmeters across each component in series — the readings add up to 6 V. This is a measurable, verifiable fact.</p>
+            </div>
+
+            <div class="angle-card">
+                <div class="angle-label">Angle 3 — Open circuit</div>
+                <p>Disconnect everything. Voltmeter across the battery still reads 6 V. The energy difference exists <em>whether or not</em> charge is flowing. Voltage is a property of the battery, not a result of current.</p>
+            </div>
+
+            <div class="angle-card">
+                <div class="angle-label">Angle 4 — Voltage without current</div>
+                <p>Just as a force can exist without movement (you can push against a wall — force is there, but nothing moves and no work is done), voltage can exist without current. Voltage is the <em>potential</em> to do work. Current is what happens when charges actually move through a complete circuit.</p>
+            </div>
+
+            <div class="key-insight">
+                <div class="key-insight-label">Key Insight</div>
+                <p><strong>Voltage is the cause. Current is the effect.</strong> The battery creates voltage (energy per charge). Components consume it (voltage drop). Total voltage given = total voltage dropped. Voltage exists even without current — it's the push that's always there.</p>
+            </div>
+        </div>
+
+        <div class="questions-column">
+            <div class="column-header">Questions</div>
+
+            <div class="card">
+                <h3>Quick Check</h3>
+
+                <div class="question" data-mcq="4-1">
+                    <p><strong>Q1:</strong> How is a voltmeter connected in a circuit?</p>
+                    <div class="mcq-options">
+                        <div class="mcq-option" data-value="A"><span class="mcq-option-letter">A</span><span>In the path of current (in series)</span></div>
+                        <div class="mcq-option" data-value="B" data-correct="true"><span class="mcq-option-letter">B</span><span>Across the component (in parallel)</span></div>
+                        <div class="mcq-option" data-value="C"><span class="mcq-option-letter">C</span><span>Only to the positive terminal</span></div>
+                        <div class="mcq-option" data-value="D"><span class="mcq-option-letter">D</span><span>The same way as an ammeter</span></div>
+                    </div>
+                    <div class="mcq-feedback"></div>
+                </div>
+
+                <div class="question" data-mcq="4-2">
+                    <p><strong>Q2:</strong> A battery is 9 V. One lamp drops 4 V. What does the second lamp in series drop?</p>
+                    <div class="mcq-options">
+                        <div class="mcq-option" data-value="A"><span class="mcq-option-letter">A</span><span>9 V</span></div>
+                        <div class="mcq-option" data-value="B"><span class="mcq-option-letter">B</span><span>4 V</span></div>
+                        <div class="mcq-option" data-value="C" data-correct="true"><span class="mcq-option-letter">C</span><span>5 V</span></div>
+                        <div class="mcq-option" data-value="D"><span class="mcq-option-letter">D</span><span>13 V</span></div>
+                    </div>
+                    <div class="mcq-feedback"></div>
+                </div>
+
+                <div class="question" data-mcq="4-3">
+                    <p><strong>Q3:</strong> A switch in a circuit is open. Is there still a voltage across the battery?</p>
+                    <div class="mcq-options">
+                        <div class="mcq-option" data-value="A"><span class="mcq-option-letter">A</span><span>No — voltage only exists when current flows</span></div>
+                        <div class="mcq-option" data-value="B" data-correct="true"><span class="mcq-option-letter">B</span><span>Yes — the battery's voltage is always there</span></div>
+                        <div class="mcq-option" data-value="C"><span class="mcq-option-letter">C</span><span>Only if the battery is new</span></div>
+                        <div class="mcq-option" data-value="D"><span class="mcq-option-letter">D</span><span>Only half the voltage remains</span></div>
+                    </div>
+                    <div class="mcq-feedback"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Think Deeper</h3>
+
+                <div class="question">
+                    <p><strong>Q4:</strong> Explain in your own words what "6 V" means in terms of energy and charge.</p>
+                    <button class="answer-toggle" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer-space answer-hidden">
+                        <p>A voltage of 6 V means the battery does 6 joules of work on every coulomb of charge that passes through it. In other words, every coulomb of charge receives 6 joules of energy from the battery. This energy is then delivered to the components in the circuit.</p>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <p><strong>Q5:</strong> We know Work = Force &times; Distance in mechanics. In electricity, Work = Charge &times; Voltage. Explain what makes voltage similar to force in this comparison.</p>
+                    <button class="answer-toggle" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer-space answer-hidden">
+                        <p>In mechanics, force is what drives an object through a distance to do work. In electricity, voltage is what drives charge through the circuit to do work. Both are the "driving agent" — the thing that makes energy transfer happen. Just as increasing force (with the same distance) increases work done, increasing voltage (with the same charge) increases the work done on the charges. This is why voltage is called electromotive force — it's the electrical equivalent of a driving force.</p>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <p><strong>Q6:</strong> A student says: "If no current flows, there can't be any voltage." Is this correct? Explain with an example.</p>
+                    <button class="answer-toggle" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer-space answer-hidden">
+                        <p>This is <strong>incorrect</strong>. A battery with an open switch has voltage across its terminals even though no current flows. The chemical reaction inside the battery maintains the energy difference (voltage) between the terminals regardless of whether there's a complete circuit. Voltage is the <em>cause</em> — it's always there. Current is the <em>effect</em> — it only flows when there's a complete path. You can have voltage without current, but you cannot have current without voltage.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-bar">
+        <button class="nav-btn" onclick="goToSection(2)">&larr; Previous</button>
+        <span class="nav-indicator">Section 4 of 8</span>
+        <button class="nav-btn" onclick="goToSection(4)">Next &rarr;</button>
+    </div>
+</div>
+
+<!-- ===================== SECTION 5 ===================== -->
+<div class="section" id="section-4">
+    <h1 class="section-header">5. Voltage in Series — The Energy Gets Shared</h1>
+    <p class="section-subtitle">In a series circuit, the battery's voltage is divided among the components. Each one takes its share.</p>
+
+    <div class="section-grid">
+        <div class="content-column">
+            <div class="column-header">Concepts</div>
+
+            <div class="card">
+                <h3>How voltage behaves in series</h3>
+                <p>In a series circuit, there is only one path. All charge flows through every component, one after another.</p>
+                <p>The battery gives a fixed amount of energy per charge (its voltage). As charge passes through each component, it <strong>loses some energy</strong>. Each component takes its share.</p>
+                <div class="formula">
+                    V<sub>battery</sub> = V<sub>component 1</sub> + V<sub>component 2</sub> + ...
+                    <div class="formula-small">The voltage drops across all components add up to the battery's voltage.</div>
+                </div>
+                <p>This is energy conservation: the energy the battery gives must equal the total energy the components take.</p>
+            </div>
+
+            <div class="card">
+                <h3>How the voltage splits</h3>
+                <p><strong>If all components are identical</strong>, voltage splits equally. Two identical lamps on a 6 V battery &rarr; 3 V each.</p>
+                <p><strong>If components are different</strong>, they don't get equal shares. The component that opposes current more (higher resistance) gets a bigger share of the voltage. We'll see exactly why with the formula V = IR in Section 7.</p>
+                <p>The battery doesn't "choose" how to split the voltage. The split is determined by the components themselves.</p>
+            </div>
+
+            <div class="card">
+                <h3>What this means in practice</h3>
+                <ul>
+                    <li>More components in series &rarr; each one gets a <strong>smaller share</strong> of the battery's voltage.</li>
+                    <li>Less voltage per component &rarr; less energy delivered &rarr; <strong>bulbs are dimmer</strong>.</li>
+                    <li>The battery's voltage doesn't change when you add components — but each component's share gets smaller.</li>
+                </ul>
+            </div>
+
+            <div class="angle-card">
+                <div class="angle-label">Angle 1 — Numbers</div>
+                <p>12 V battery, three identical lamps. Each gets 4 V. Now add a fourth lamp: each gets 3 V. The battery is the same — the sharing changes. More lamps = smaller share each.</p>
+            </div>
+
+            <div class="angle-card">
+                <div class="angle-label">Angle 2 — Unequal components</div>
+                <p>6 V battery, two components. Voltmeter reads 4 V across one and 2 V across the other. 4 + 2 = 6. The one with 4 V is "using" more energy per charge — it has higher resistance.</p>
+            </div>
+
+            <div class="angle-card">
+                <div class="angle-label">Angle 3 — Single component</div>
+                <p>One lamp on a 6 V battery. The lamp drops the full 6 V. All the battery's energy goes to that one component. There's nothing else to share with.</p>
+            </div>
+
+            <div class="angle-card">
+                <div class="angle-label">Angle 4 — Why bulbs dim</div>
+                <p>Each bulb in series gets a fraction of the total voltage. Less voltage means less energy delivered to each bulb. Less energy means less light. This is observable — add a second bulb in series and watch both bulbs become noticeably dimmer than one bulb alone.</p>
+            </div>
+
+            <div class="key-insight">
+                <div class="key-insight-label">Key Insight</div>
+                <p>Series means sharing. The battery's total voltage is divided among the components. More components = smaller share each = less energy delivered to each one. The total of all voltage drops always equals the battery voltage.</p>
+            </div>
+        </div>
+
+        <div class="questions-column">
+            <div class="column-header">Questions</div>
+
+            <div class="card">
+                <h3>Quick Check</h3>
+
+                <div class="question" data-mcq="5-1">
+                    <p><strong>Q1:</strong> A 9 V battery is connected to three identical lamps in series. What is the voltage across each lamp?</p>
+                    <div class="mcq-options">
+                        <div class="mcq-option" data-value="A"><span class="mcq-option-letter">A</span><span>9 V</span></div>
+                        <div class="mcq-option" data-value="B" data-correct="true"><span class="mcq-option-letter">B</span><span>3 V</span></div>
+                        <div class="mcq-option" data-value="C"><span class="mcq-option-letter">C</span><span>27 V</span></div>
+                        <div class="mcq-option" data-value="D"><span class="mcq-option-letter">D</span><span>4.5 V</span></div>
+                    </div>
+                    <div class="mcq-feedback"></div>
+                </div>
+
+                <div class="question" data-mcq="5-2">
+                    <p><strong>Q2:</strong> A 12 V battery has two lamps in series. V<sub>1</sub> = 5 V. What is V<sub>2</sub>?</p>
+                    <div class="mcq-options">
+                        <div class="mcq-option" data-value="A"><span class="mcq-option-letter">A</span><span>5 V</span></div>
+                        <div class="mcq-option" data-value="B"><span class="mcq-option-letter">B</span><span>12 V</span></div>
+                        <div class="mcq-option" data-value="C" data-correct="true"><span class="mcq-option-letter">C</span><span>7 V</span></div>
+                        <div class="mcq-option" data-value="D"><span class="mcq-option-letter">D</span><span>17 V</span></div>
+                    </div>
+                    <div class="mcq-feedback"></div>
+                </div>
+
+                <div class="question" data-mcq="5-3">
+                    <p><strong>Q3:</strong> You add another lamp in series to a circuit. What happens to the voltage across each existing lamp?</p>
+                    <div class="mcq-options">
+                        <div class="mcq-option" data-value="A"><span class="mcq-option-letter">A</span><span>It increases</span></div>
+                        <div class="mcq-option" data-value="B" data-correct="true"><span class="mcq-option-letter">B</span><span>It decreases</span></div>
+                        <div class="mcq-option" data-value="C"><span class="mcq-option-letter">C</span><span>It stays the same</span></div>
+                        <div class="mcq-option" data-value="D"><span class="mcq-option-letter">D</span><span>It doubles</span></div>
+                    </div>
+                    <div class="mcq-feedback"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Think Deeper</h3>
+
+                <div class="question">
+                    <p><strong>Q4:</strong> A series circuit has a 6 V battery and two lamps. Voltmeter across lamp 1 reads 2 V, across lamp 2 reads 4 V. Which lamp is "using" more energy per charge? Why might they be different?</p>
+                    <button class="answer-toggle" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer-space answer-hidden">
+                        <p>Lamp 2 is using more energy per charge (4 V vs 2 V). They are different because the lamps are not identical — lamp 2 has higher resistance, so it opposes the current more and therefore takes a larger share of the battery's energy. The total (2 + 4 = 6 V) still equals the battery voltage.</p>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <p><strong>Q5:</strong> Explain why the total voltage drops must equal the battery voltage. (Hint: think about energy conservation.)</p>
+                    <button class="answer-toggle" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer-space answer-hidden">
+                        <p>The battery gives a fixed amount of energy to each coulomb of charge (that's what its voltage means). As the charge travels through the circuit, each component takes some of that energy. By the time the charge returns to the battery, all the energy must have been transferred to the components — none can be "left over" and none can appear from nowhere. So the total energy taken by all components (sum of voltage drops) must exactly equal the energy given by the battery. This is the law of conservation of energy applied to circuits.</p>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <p><strong>Q6:</strong> Three identical resistors are connected in series to a 15 V battery. What is the voltage across each? Now one resistor is replaced with one that has double the resistance. Without calculating, will it get more or less than 5 V? Why?</p>
+                    <button class="answer-toggle" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer-space answer-hidden">
+                        <p>With three identical resistors: 15 V / 3 = <strong>5 V each</strong>.</p>
+                        <p>When one is replaced with a higher resistance: it will get <strong>more than 5 V</strong>. A component with higher resistance opposes current more, so it "uses" more energy per charge, which means a larger voltage drop. The other two (smaller) resistors will now each get less than 5 V, but the total will still be 15 V.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-bar">
+        <button class="nav-btn" onclick="goToSection(3)">&larr; Previous</button>
+        <span class="nav-indicator">Section 5 of 8</span>
+        <button class="nav-btn" onclick="goToSection(5)">Next &rarr;</button>
+    </div>
+</div>
+
+<!-- ===================== SECTION 6 ===================== -->
+<div class="section" id="section-5">
+    <h1 class="section-header">6. Voltage in Parallel — Every Branch Gets the Full Amount</h1>
+    <p class="section-subtitle">In a parallel circuit, each branch connects directly to the battery. No sharing.</p>
+
+    <div class="section-grid">
+        <div class="content-column">
+            <div class="column-header">Concepts</div>
+
+            <div class="card">
+                <h3>How voltage behaves in parallel</h3>
+                <p>In a parallel circuit, each branch is its own separate path from one terminal of the battery to the other.</p>
+                <p>Because each branch connects <strong>directly to both terminals</strong> of the battery, the voltage across each branch equals the battery's voltage.</p>
+                <div class="formula">
+                    V<sub>battery</sub> = V<sub>branch 1</sub> = V<sub>branch 2</sub> = V<sub>branch 3</sub> = ...
+                    <div class="formula-small">Every branch gets the full battery voltage.</div>
+                </div>
+                <p>This is fundamentally different from series. In series, components share voltage. In parallel, every branch gets the full amount.</p>
+            </div>
+
+            <div class="card">
+                <h3>Why does every branch get the full voltage?</h3>
+                <p>Trace any single branch: it starts at the + terminal and ends at the &minus; terminal. The energy difference between those two points <strong>IS</strong> the battery's voltage.</p>
+                <p>Every branch experiences this same energy difference, because every branch connects to the same two points (the battery's terminals).</p>
+                <p>Adding more branches doesn't reduce the voltage available to any branch. Each branch is <strong>independent</strong>.</p>
+            </div>
+
+            <div class="card">
+                <h3>What this means in practice</h3>
+                <ul>
+                    <li>Every lamp in parallel gets the <strong>same voltage</strong> &rarr; same energy per charge &rarr; <strong>same brightness</strong>.</li>
+                    <li>Adding more lamps in parallel doesn't dim the existing ones.</li>
+                    <li><strong>But:</strong> each branch draws its own current. More branches = more total current from the battery = the battery drains faster.</li>
+                </ul>
+            </div>
+
+            <div class="angle-card">
+                <div class="angle-label">Angle 1 — Measurement</div>
+                <p>Connect voltmeters across each branch of a parallel circuit. They all read the same value — the battery's voltage. Always. No exceptions.</p>
+            </div>
+
+            <div class="angle-card">
+                <div class="angle-label">Angle 2 — Adding branches</div>
+                <p>Start with one lamp on a 6 V battery: 6 V across it. Add a second lamp in parallel. Voltmeter across the first lamp: still 6 V. The first lamp doesn't "know" or "care" that another branch was added. It still connects to the same battery terminals.</p>
+            </div>
+
+            <div class="angle-card">
+                <div class="angle-label">Angle 3 — Independence</div>
+                <p>Remove one branch (or a lamp breaks). Other branches are unaffected. Their voltage doesn't change. Their current doesn't change. They are independent paths, each connected to the battery on their own.</p>
+            </div>
+
+            <div class="angle-card">
+                <div class="angle-label">Angle 4 — Your house</div>
+                <p>Your house is wired in parallel. The TV gets 230 V. The fridge gets 230 V. The lamp gets 230 V. Turning on the TV doesn't change the fridge's voltage. Each appliance connects independently to the mains supply.</p>
+            </div>
+
+            <div class="key-insight">
+                <div class="key-insight-label">Key Insight</div>
+                <p>Parallel means independence. Each branch gets the full battery voltage because each connects directly to the battery terminals. Adding or removing branches doesn't affect the voltage across the others.</p>
+            </div>
+        </div>
+
+        <div class="questions-column">
+            <div class="column-header">Questions</div>
+
+            <div class="card">
+                <h3>Quick Check</h3>
+
+                <div class="question" data-mcq="6-1">
+                    <p><strong>Q1:</strong> A 6 V battery is connected to three lamps in parallel. What is the voltage across each lamp?</p>
+                    <div class="mcq-options">
+                        <div class="mcq-option" data-value="A"><span class="mcq-option-letter">A</span><span>2 V</span></div>
+                        <div class="mcq-option" data-value="B" data-correct="true"><span class="mcq-option-letter">B</span><span>6 V</span></div>
+                        <div class="mcq-option" data-value="C"><span class="mcq-option-letter">C</span><span>18 V</span></div>
+                        <div class="mcq-option" data-value="D"><span class="mcq-option-letter">D</span><span>3 V</span></div>
+                    </div>
+                    <div class="mcq-feedback"></div>
+                </div>
+
+                <div class="question" data-mcq="6-2">
+                    <p><strong>Q2:</strong> One branch of a parallel circuit is removed. What happens to the voltage across the remaining branches?</p>
+                    <div class="mcq-options">
+                        <div class="mcq-option" data-value="A"><span class="mcq-option-letter">A</span><span>It increases</span></div>
+                        <div class="mcq-option" data-value="B"><span class="mcq-option-letter">B</span><span>It decreases</span></div>
+                        <div class="mcq-option" data-value="C" data-correct="true"><span class="mcq-option-letter">C</span><span>It stays the same</span></div>
+                        <div class="mcq-option" data-value="D"><span class="mcq-option-letter">D</span><span>It becomes zero</span></div>
+                    </div>
+                    <div class="mcq-feedback"></div>
+                </div>
+
+                <div class="question" data-mcq="6-3">
+                    <p><strong>Q3:</strong> Why does every branch in parallel get the full battery voltage?</p>
+                    <div class="mcq-options">
+                        <div class="mcq-option" data-value="A"><span class="mcq-option-letter">A</span><span>The battery increases its voltage for each branch</span></div>
+                        <div class="mcq-option" data-value="B"><span class="mcq-option-letter">B</span><span>The branches share the voltage equally</span></div>
+                        <div class="mcq-option" data-value="C" data-correct="true"><span class="mcq-option-letter">C</span><span>Each branch connects directly to both battery terminals</span></div>
+                        <div class="mcq-option" data-value="D"><span class="mcq-option-letter">D</span><span>Parallel branches have no resistance</span></div>
+                    </div>
+                    <div class="mcq-feedback"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Think Deeper</h3>
+
+                <div class="question">
+                    <p><strong>Q4:</strong> Explain why every branch in a parallel circuit gets the same voltage. Use the idea of "tracing the path" in your answer.</p>
+                    <button class="answer-toggle" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer-space answer-hidden">
+                        <p>Every branch starts at the positive terminal and ends at the negative terminal of the battery. The voltage is the energy difference between these two terminals. Since every branch connects to the <em>same</em> two terminals, every branch experiences the <em>same</em> energy difference. It doesn't matter how many branches there are — each one "sees" the same starting and ending point.</p>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <p><strong>Q5:</strong> If all branches in a parallel circuit get the same voltage, why does the battery drain faster when you add more branches?</p>
+                    <button class="answer-toggle" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer-space answer-hidden">
+                        <p>Each branch draws its own current independently. When you add a new branch, the existing branches still draw the same current as before, but the new branch draws <em>additional</em> current. The total current from the battery increases. More current means the battery is delivering more energy per second, so its stored energy is used up faster. The voltage per branch stays the same, but the total current (and therefore total energy delivery) goes up.</p>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <p><strong>Q6:</strong> Compare series and parallel: In series, two identical lamps on a 6 V battery each get ___ V. In parallel, two identical lamps on a 6 V battery each get ___ V. Which arrangement gives brighter lamps? Why?</p>
+                    <button class="answer-toggle" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer-space answer-hidden">
+                        <p>In series: each lamp gets <strong>3 V</strong> (voltage is shared: 6/2 = 3). In parallel: each lamp gets <strong>6 V</strong> (each branch gets the full voltage). The parallel arrangement gives brighter lamps because each lamp receives more energy per charge (6 V vs 3 V), so more energy is converted to light.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-bar">
+        <button class="nav-btn" onclick="goToSection(4)">&larr; Previous</button>
+        <span class="nav-indicator">Section 6 of 8</span>
+        <button class="nav-btn" onclick="goToSection(6)">Next &rarr;</button>
+    </div>
+</div>
+
+<!-- ===================== SECTION 7 ===================== -->
+<div class="section" id="section-6">
+    <h1 class="section-header">7. Resistance — What Causes Voltage to Drop</h1>
+    <p class="section-subtitle">Resistance opposes current. It connects voltage and current through one simple equation.</p>
+
+    <div class="section-grid">
+        <div class="content-column">
+            <div class="column-header">Concepts</div>
+
+            <div class="card">
+                <h3>What is resistance?</h3>
+                <p>Every component offers some <strong>opposition</strong> to the flow of charge. This opposition is called <strong>resistance</strong>.</p>
+                <p>It is measured in <strong>ohms</strong> (symbol: &Omega;).</p>
+                <p>Inside a conductor, electrons collide with atoms as they move through. These collisions slow the electrons down and transfer energy from the electrons to the atoms. This is why components with high resistance get hot — the energy of the moving electrons is being converted to heat.</p>
+            </div>
+
+            <div class="card">
+                <h3>The relationship — Ohm's Law</h3>
+                <p>We've established that voltage is the push (energy per charge) and current is the flow. Resistance sits between them:</p>
+                <div class="formula">
+                    R = V / I
+                    <div class="formula-small">Resistance = Voltage / Current</div>
+                </div>
+                <p>Rearranged:</p>
+                <div class="formula">
+                    I = V / R
+                    <div class="formula-small">More voltage &rarr; more current. More resistance &rarr; less current.</div>
+                </div>
+                <div class="formula">
+                    V = I &times; R
+                    <div class="formula-small">The voltage drop across a component = current through it &times; its resistance.</div>
+                </div>
+                <p>This is not just a formula to memorize. It captures the fundamental relationship: <strong>voltage drives, resistance opposes, current is what results.</strong></p>
+            </div>
+
+            <div class="card">
+                <h3>V = IR explains everything we've seen</h3>
+                <p><strong>Series circuits:</strong> Current is the same through all components (I is constant). So V = IR tells us that the component with <em>bigger R</em> gets a <em>bigger voltage drop</em>. That's <strong>why</strong> voltage splits unevenly between different components in series.</p>
+                <p><strong>Parallel circuits:</strong> Voltage is the same across all branches (V is constant). So I = V/R tells us that the branch with <em>smaller R</em> gets <em>more current</em>. That's <strong>why</strong> current splits unevenly between different branches in parallel.</p>
+            </div>
+
+            <div class="card">
+                <h3>Resistance in series and parallel</h3>
+                <p><strong>Series:</strong> Total resistance = R<sub>1</sub> + R<sub>2</sub> + R<sub>3</sub> + ...</p>
+                <p>More components in series means more total opposition. More resistance means less current from the same battery.</p>
+                <p><strong>Parallel:</strong> Adding more branches <em>decreases</em> total resistance.</p>
+                <div class="formula">
+                    1/R<sub>total</sub> = 1/R<sub>1</sub> + 1/R<sub>2</sub> + ...
+                    <div class="formula-small">The reciprocal of total resistance = sum of reciprocals of each branch.</div>
+                </div>
+                <p>Why? Each new branch is another path for charge to flow. More paths = less overall opposition. This is why total current from the battery increases when you add parallel branches.</p>
+            </div>
+
+            <div class="card">
+                <h3>Types of resistors</h3>
+                <p><strong>Fixed resistor</strong> — its resistance stays constant. Used when you want a specific, unchanging resistance in a circuit.</p>
+                <p><strong>Variable resistor</strong> — its resistance can be adjusted. Used in dimmer switches (control brightness) and volume controls (control current to speakers).</p>
+            </div>
+
+            <div class="angle-card">
+                <div class="angle-label">Angle 1 — V = IR in series (worked example)</div>
+                <p>6 V battery, two resistors: 10 &Omega; and 20 &Omega; in series.</p>
+                <p>Total R = 10 + 20 = 30 &Omega;. Current I = V/R = 6/30 = 0.2 A.</p>
+                <p>Voltage across 10 &Omega;: V = 0.2 &times; 10 = 2 V.</p>
+                <p>Voltage across 20 &Omega;: V = 0.2 &times; 20 = 4 V.</p>
+                <p>Check: 2 + 4 = 6 V. Matches the battery. Everything works.</p>
+            </div>
+
+            <div class="angle-card">
+                <div class="angle-label">Angle 2 — V = IR in parallel (worked example)</div>
+                <p>6 V battery, two branches: 12 &Omega; and 6 &Omega; in parallel.</p>
+                <p>Branch 1: I = V/R = 6/12 = 0.5 A.</p>
+                <p>Branch 2: I = V/R = 6/6 = 1.0 A.</p>
+                <p>Total current = 0.5 + 1.0 = 1.5 A. The lower-resistance branch carries more current.</p>
+            </div>
+
+            <div class="angle-card">
+                <div class="angle-label">Angle 3 — Why resistance causes voltage drop</div>
+                <p>A resistor opposes charge flow. To push charge through it, energy must be spent. That energy expenditure IS the voltage drop. Higher resistance = more energy needed per charge to push through = bigger voltage drop.</p>
+            </div>
+
+            <div class="angle-card">
+                <div class="angle-label">Angle 4 — Practical application</div>
+                <p>A variable resistor lets you control current. Turn up resistance &rarr; less current &rarr; dimmer lamp. Turn down resistance &rarr; more current &rarr; brighter lamp. The voltage from the battery hasn't changed — you've changed how much the circuit resists it.</p>
+            </div>
+
+            <div class="key-insight">
+                <div class="key-insight-label">Key Insight</div>
+                <p>V = IR is the single most important equation in basic circuits. It bridges voltage, current, and resistance. It explains <em>why</em> voltage splits in series (same I, different R &rarr; different V). It explains <em>why</em> current splits in parallel (same V, different R &rarr; different I). Master this equation and its meaning, and circuits become straightforward.</p>
+            </div>
+        </div>
+
+        <div class="questions-column">
+            <div class="column-header">Questions</div>
+
+            <div class="card">
+                <h3>Quick Check</h3>
+
+                <div class="question" data-mcq="7-1">
+                    <p><strong>Q1:</strong> A component has 12 V across it and 0.5 A through it. What is its resistance?</p>
+                    <div class="mcq-options">
+                        <div class="mcq-option" data-value="A"><span class="mcq-option-letter">A</span><span>6 &Omega;</span></div>
+                        <div class="mcq-option" data-value="B"><span class="mcq-option-letter">B</span><span>12.5 &Omega;</span></div>
+                        <div class="mcq-option" data-value="C" data-correct="true"><span class="mcq-option-letter">C</span><span>24 &Omega;</span></div>
+                        <div class="mcq-option" data-value="D"><span class="mcq-option-letter">D</span><span>0.042 &Omega;</span></div>
+                    </div>
+                    <div class="mcq-feedback"></div>
+                </div>
+
+                <div class="question" data-mcq="7-2">
+                    <p><strong>Q2:</strong> If resistance doubles but voltage stays the same, what happens to current?</p>
+                    <div class="mcq-options">
+                        <div class="mcq-option" data-value="A"><span class="mcq-option-letter">A</span><span>It doubles</span></div>
+                        <div class="mcq-option" data-value="B" data-correct="true"><span class="mcq-option-letter">B</span><span>It halves</span></div>
+                        <div class="mcq-option" data-value="C"><span class="mcq-option-letter">C</span><span>It stays the same</span></div>
+                        <div class="mcq-option" data-value="D"><span class="mcq-option-letter">D</span><span>It becomes zero</span></div>
+                    </div>
+                    <div class="mcq-feedback"></div>
+                </div>
+
+                <div class="question" data-mcq="7-3">
+                    <p><strong>Q3:</strong> In a series circuit, which resistor has the biggest voltage drop?</p>
+                    <div class="mcq-options">
+                        <div class="mcq-option" data-value="A"><span class="mcq-option-letter">A</span><span>The one closest to the battery</span></div>
+                        <div class="mcq-option" data-value="B"><span class="mcq-option-letter">B</span><span>The one with the smallest resistance</span></div>
+                        <div class="mcq-option" data-value="C" data-correct="true"><span class="mcq-option-letter">C</span><span>The one with the largest resistance</span></div>
+                        <div class="mcq-option" data-value="D"><span class="mcq-option-letter">D</span><span>They all have the same voltage drop</span></div>
+                    </div>
+                    <div class="mcq-feedback"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Think Deeper</h3>
+
+                <div class="question">
+                    <p><strong>Q4:</strong> A 6 V battery is connected to a 12 &Omega; resistor. Calculate the current. Now a second 12 &Omega; resistor is added in series. Calculate the new total resistance, the new current, and the voltage across each resistor.</p>
+                    <button class="answer-toggle" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer-space answer-hidden">
+                        <p><strong>Single resistor:</strong> I = V/R = 6/12 = 0.5 A.</p>
+                        <p><strong>Two in series:</strong> Total R = 12 + 12 = 24 &Omega;. New current I = 6/24 = 0.25 A. Voltage across each: V = IR = 0.25 &times; 12 = 3 V. Check: 3 + 3 = 6 V.</p>
+                        <p>Adding the second resistor doubled the resistance and halved the current. Each resistor now gets half the battery voltage.</p>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <p><strong>Q5:</strong> A buzzer has more resistance than a lamp. Both are connected to the same battery in separate (parallel) branches. Which one carries more current? Explain using V = IR.</p>
+                    <button class="answer-toggle" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer-space answer-hidden">
+                        <p>The <strong>lamp</strong> carries more current. In parallel, both get the same voltage (V). Using I = V/R, the component with <em>less</em> resistance gets <em>more</em> current. Since the lamp has less resistance than the buzzer, more current flows through the lamp.</p>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <p><strong>Q6:</strong> Explain in your own words why adding a parallel branch <em>reduces</em> the total resistance of the circuit.</p>
+                    <button class="answer-toggle" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer-space answer-hidden">
+                        <p>When you add a new branch in parallel, you're giving the electrons <em>another path</em> to flow through. The existing path is still there and unchanged, but now there's an additional route. More available paths means the overall opposition to current is lower — it's easier for charge to flow through the circuit as a whole. The result is that the total resistance decreases, and the total current from the battery increases.</p>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <p><strong>Q7:</strong> Why does a bulb get hot when current flows through it? Connect your answer to the idea of resistance.</p>
+                    <button class="answer-toggle" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer-space answer-hidden">
+                        <p>The filament of a bulb has high resistance. As electrons flow through it, they collide with the atoms in the filament. These collisions transfer energy from the electrons to the atoms, causing them to vibrate more — which we observe as heat and light. The higher the resistance, the more energy is transferred per charge (higher voltage drop), and the hotter the component gets.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-bar">
+        <button class="nav-btn" onclick="goToSection(5)">&larr; Previous</button>
+        <span class="nav-indicator">Section 7 of 8</span>
+        <button class="nav-btn" onclick="goToSection(7)">Next &rarr;</button>
+    </div>
+</div>
+
+<!-- ===================== SECTION 8 ===================== -->
+<div class="section" id="section-7">
+    <h1 class="section-header">8. Putting It All Together</h1>
+    <p class="section-subtitle">Three rules govern all circuits. Everything else follows from them.</p>
+
+    <div class="section-grid">
+        <div class="content-column">
+            <div class="column-header">Summary</div>
+
+            <div class="card">
+                <h3>The three fundamental rules</h3>
+                <ol>
+                    <li><strong>Charge is conserved.</strong> Current in = current out, at every point, always. Electrons are never created or destroyed in a circuit.</li>
+                    <li><strong>Energy is conserved.</strong> Total voltage given by the battery = total voltage dropped across components. Energy in = energy out.</li>
+                    <li><strong>V = IR.</strong> Voltage, current, and resistance are always linked by this relationship. It governs how energy and charge distribute themselves in any circuit.</li>
+                </ol>
+                <p>Everything about series and parallel circuits follows from these three rules. There is nothing else to memorize — just apply them.</p>
+            </div>
+
+            <div class="card">
+                <h3>Series vs Parallel — Complete Comparison</h3>
+                <table class="summary-table">
+                    <tr><th>Property</th><th>Series</th><th>Parallel</th></tr>
+                    <tr><td><strong>Current</strong></td><td>Same through all components</td><td>Splits at junctions (adds up to battery current)</td></tr>
+                    <tr><td><strong>Voltage</strong></td><td>Splits across components (adds up to battery voltage)</td><td>Same across all branches (equals battery voltage)</td></tr>
+                    <tr><td><strong>Resistance</strong></td><td>R<sub>total</sub> = R<sub>1</sub> + R<sub>2</sub> + ... (increases)</td><td>Decreases with more branches</td></tr>
+                    <tr><td><strong>One component breaks</strong></td><td>Whole circuit stops</td><td>Other branches unaffected</td></tr>
+                    <tr><td><strong>Add more components</strong></td><td>Current decreases, each gets less voltage, dimmer</td><td>Total current increases, each gets full voltage, same brightness</td></tr>
+                    <tr><td><strong>Switches</strong></td><td>One switch controls all</td><td>Each branch can be independent</td></tr>
+                    <tr><td><strong>Real-world example</strong></td><td>Old-style Christmas lights</td><td>House wiring</td></tr>
+                </table>
+            </div>
+
+            <div class="card">
+                <h3>Identifying series and parallel</h3>
+                <p><strong>Series:</strong> Components are on the <strong>same single path</strong>. Current must flow through all of them, one after another. There is no alternative route.</p>
+                <p><strong>Parallel:</strong> Components are on <strong>different paths</strong> (branches). Current splits, and each branch is independent. The branches start and end at the same two points.</p>
+                <p>A helpful test: if removing one component breaks the entire circuit, it's in series. If other components still work, it's in parallel.</p>
+            </div>
+
+            <div class="card">
+                <h3>How to approach any circuit problem</h3>
+                <ol>
+                    <li><strong>Identify</strong> which parts are in series and which are in parallel.</li>
+                    <li><strong>Apply the current rule:</strong> Same in series, splits in parallel.</li>
+                    <li><strong>Apply the voltage rule:</strong> Splits in series, same in parallel.</li>
+                    <li><strong>Use V = IR</strong> to calculate whatever you need.</li>
+                    <li><strong>Check:</strong> Do the voltages add up to the battery voltage? Do the currents add up at junctions? If yes, your answer is likely correct.</li>
+                </ol>
+            </div>
+
+            <div class="card">
+                <h3>Key equations</h3>
+                <div class="formula">V = I &times; R<div class="formula-small">Voltage = Current &times; Resistance</div></div>
+                <div class="formula">I = V / R<div class="formula-small">Current = Voltage / Resistance</div></div>
+                <div class="formula">R = V / I<div class="formula-small">Resistance = Voltage / Current</div></div>
+                <div class="formula">W = Q &times; V<div class="formula-small">Work done = Charge &times; Voltage</div></div>
+            </div>
+
+            <div class="key-insight">
+                <div class="key-insight-label">The Big Picture</div>
+                <p>The battery provides energy (voltage). The circuit determines how that energy is distributed. In series, components share the energy. In parallel, each branch gets the full energy independently. Resistance determines how much current flows and how the voltage distributes. V = IR ties it all together.</p>
+            </div>
+        </div>
+
+        <div class="questions-column">
+            <div class="column-header">Questions</div>
+
+            <div class="card">
+                <h3>Quick Check</h3>
+
+                <div class="question" data-mcq="8-1">
+                    <p><strong>Q1:</strong> A 12 V battery is connected to a 4 &Omega; and 8 &Omega; resistor <em>in series</em>. What is the current?</p>
+                    <div class="mcq-options">
+                        <div class="mcq-option" data-value="A" data-correct="true"><span class="mcq-option-letter">A</span><span>1 A</span></div>
+                        <div class="mcq-option" data-value="B"><span class="mcq-option-letter">B</span><span>3 A</span></div>
+                        <div class="mcq-option" data-value="C"><span class="mcq-option-letter">C</span><span>1.5 A</span></div>
+                        <div class="mcq-option" data-value="D"><span class="mcq-option-letter">D</span><span>12 A</span></div>
+                    </div>
+                    <div class="mcq-feedback"></div>
+                </div>
+
+                <div class="question" data-mcq="8-2">
+                    <p><strong>Q2:</strong> In the same circuit (12 V, 4 &Omega; and 8 &Omega; in series), what is the voltage across the 8 &Omega; resistor?</p>
+                    <div class="mcq-options">
+                        <div class="mcq-option" data-value="A"><span class="mcq-option-letter">A</span><span>4 V</span></div>
+                        <div class="mcq-option" data-value="B" data-correct="true"><span class="mcq-option-letter">B</span><span>8 V</span></div>
+                        <div class="mcq-option" data-value="C"><span class="mcq-option-letter">C</span><span>12 V</span></div>
+                        <div class="mcq-option" data-value="D"><span class="mcq-option-letter">D</span><span>6 V</span></div>
+                    </div>
+                    <div class="mcq-feedback"></div>
+                </div>
+
+                <div class="question" data-mcq="8-3">
+                    <p><strong>Q3:</strong> Which of these is a reason houses are wired in parallel, not series?</p>
+                    <div class="mcq-options">
+                        <div class="mcq-option" data-value="A"><span class="mcq-option-letter">A</span><span>It uses less wire</span></div>
+                        <div class="mcq-option" data-value="B"><span class="mcq-option-letter">B</span><span>Parallel uses less electricity</span></div>
+                        <div class="mcq-option" data-value="C" data-correct="true"><span class="mcq-option-letter">C</span><span>Each appliance gets full voltage and works independently</span></div>
+                        <div class="mcq-option" data-value="D"><span class="mcq-option-letter">D</span><span>Series circuits are dangerous</span></div>
+                    </div>
+                    <div class="mcq-feedback"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Think Deeper</h3>
+
+                <div class="question">
+                    <p><strong>Q4:</strong> A student has a 12 V battery, a 6 &Omega; resistor and a 3 &Omega; resistor. Compare what happens when they are connected in <strong>series</strong> vs in <strong>parallel</strong>. Calculate current and voltage across each resistor for both cases.</p>
+                    <button class="answer-toggle" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer-space answer-hidden">
+                        <p><strong>Series:</strong> R<sub>total</sub> = 6 + 3 = 9 &Omega;. I = 12/9 = 4/3 A &approx; 1.33 A (same through both). V across 6 &Omega; = (4/3) &times; 6 = 8 V. V across 3 &Omega; = (4/3) &times; 3 = 4 V. Check: 8 + 4 = 12 V.</p>
+                        <p><strong>Parallel:</strong> V across both = 12 V. I through 6 &Omega; = 12/6 = 2 A. I through 3 &Omega; = 12/3 = 4 A. Total current = 2 + 4 = 6 A.</p>
+                        <p>Notice: parallel draws much more current (6 A vs 1.33 A) because the total resistance is lower and each branch gets the full voltage.</p>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <p><strong>Q5:</strong> Why are houses wired in parallel and not in series? Give at least two reasons.</p>
+                    <button class="answer-toggle" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer-space answer-hidden">
+                        <p><strong>Reason 1 — Independence:</strong> In parallel, each appliance works independently. Turning off the TV doesn't affect the fridge. If one appliance breaks, others keep working. In series, one broken appliance would stop everything.</p>
+                        <p><strong>Reason 2 — Full voltage:</strong> In parallel, every appliance gets the full mains voltage (e.g., 230 V). In series, the voltage would be shared — each appliance would get only a fraction, and they wouldn't work properly. Appliances are designed to run at a specific voltage.</p>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <p><strong>Q6:</strong> State the three fundamental rules that govern all circuits. Then explain how each one applies to a series circuit with a 6 V battery and two 10 &Omega; resistors.</p>
+                    <button class="answer-toggle" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer-space answer-hidden">
+                        <p><strong>Rule 1 — Charge conserved:</strong> The current is the same through both resistors: I = V/R = 6/20 = 0.3 A everywhere.</p>
+                        <p><strong>Rule 2 — Energy conserved:</strong> V across first resistor = 0.3 &times; 10 = 3 V. V across second = 0.3 &times; 10 = 3 V. Total: 3 + 3 = 6 V = battery voltage.</p>
+                        <p><strong>Rule 3 — V = IR:</strong> This was used to calculate both the current (I = V/R<sub>total</sub>) and the individual voltage drops (V = IR). All three rules work together consistently.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-bar">
+        <button class="nav-btn" onclick="goToSection(6)">&larr; Previous</button>
+        <span class="nav-indicator">Section 8 of 8</span>
+        <button class="nav-btn" disabled>Complete</button>
+    </div>
+</div>
+
+</div><!-- end main -->
+</div><!-- end app -->
+
+<script>
+// Mobile menu
+function toggleMobileMenu() {
+    document.querySelector('.sidebar').classList.toggle('open');
+    document.querySelector('.sidebar-overlay').classList.toggle('open');
+}
+
+// Navigation
+function goToSection(index) {
+    const sections = document.querySelectorAll('.section');
+    const sidebarItems = document.querySelectorAll('.sidebar-item');
+
+    sections.forEach(s => s.classList.remove('active'));
+    sidebarItems.forEach(s => s.classList.remove('active'));
+
+    sections[index].classList.add('active');
+    sidebarItems[index].classList.add('active');
+
+    // Close mobile menu if open
+    document.querySelector('.sidebar').classList.remove('open');
+    document.querySelector('.sidebar-overlay').classList.remove('open');
+
+    window.scrollTo(0, 0);
+}
+
+// Sidebar click
+document.querySelectorAll('.sidebar-item').forEach(item => {
+    item.addEventListener('click', () => {
+        const index = parseInt(item.dataset.section);
+        goToSection(index);
+    });
+});
+
+// MCQ interaction
+document.querySelectorAll('.mcq-option').forEach(option => {
+    option.addEventListener('click', function() {
+        const questionEl = this.closest('.question');
+        const options = questionEl.querySelectorAll('.mcq-option');
+        const feedbackEl = questionEl.querySelector('.mcq-feedback');
+
+        // Don't allow re-answering
+        if (questionEl.dataset.answered === 'true') return;
+        questionEl.dataset.answered = 'true';
+
+        const isCorrect = this.dataset.correct === 'true';
+
+        // Find correct option
+        const correctOption = questionEl.querySelector('[data-correct="true"]');
+
+        if (isCorrect) {
+            this.classList.add('correct');
+            feedbackEl.textContent = 'Correct!';
+            feedbackEl.className = 'mcq-feedback show correct-feedback';
+        } else {
+            this.classList.add('incorrect');
+            correctOption.classList.add('correct');
+            feedbackEl.textContent = 'Not quite. The correct answer is highlighted in green.';
+            feedbackEl.className = 'mcq-feedback show incorrect-feedback';
+        }
+
+        // Disable all options
+        options.forEach(o => {
+            o.style.pointerEvents = 'none';
+        });
+    });
+});
+
+// Toggle answer
+function toggleAnswer(btn) {
+    const answerEl = btn.nextElementSibling;
+    if (answerEl.classList.contains('answer-hidden')) {
+        answerEl.classList.remove('answer-hidden');
+        btn.textContent = 'Hide Answer';
+    } else {
+        answerEl.classList.add('answer-hidden');
+        btn.textContent = 'Show Answer';
+    }
+}
+</script>
+</body>
+</html>
